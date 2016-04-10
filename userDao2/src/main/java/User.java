@@ -2,7 +2,7 @@
  * Created by NCL on 2016-04-10.
  */
 public class User {
-    
+
     private Long id;
     private String name;
     private String password;
