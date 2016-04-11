@@ -4,8 +4,10 @@ import java.sql.*;
  * Created by NCL on 2016-04-10.
  */
 public class UserDao {
+    private final SimpleConnectionMaker simpleConnectionMaker = new SimpleConnectionMaker();
+
     public User get(Long id) throws SQLException, ClassNotFoundException {
-        Connection connection = getConnection();
+        Connection connection = simpleConnectionMaker.getConnection();
 
         String sql = "select * from userinfo where id = ?";
 
@@ -28,7 +30,7 @@ public class UserDao {
     }
 
     public Long add(User user) throws ClassNotFoundException, SQLException {
-        Connection connection = getConnection();
+        Connection connection = simpleConnectionMaker.getConnection();
 
         String sql = "insert into userinfo (name, password) values (?, ?)";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -56,8 +58,5 @@ public class UserDao {
         return id;
     }
 
-    public Connection getConnection() throws ClassNotFoundException, SQLException{
-            Class.forName("com.mysql.jdbc.Driver");
-            return DriverManager.getConnection("jdbc:mysql://localhost/userinfo?characterEncoding=utf8","ncl","1234");
-    }
+
 }
