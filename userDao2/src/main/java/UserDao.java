@@ -3,7 +3,7 @@ import java.sql.*;
 /**
  * Created by NCL on 2016-04-10.
  */
-public abstract class UserDao {
+public class UserDao {
     public User get(Long id) throws SQLException, ClassNotFoundException {
         Connection connection = getConnection();
 
@@ -56,5 +56,8 @@ public abstract class UserDao {
         return id;
     }
 
-    public abstract Connection getConnection() throws ClassNotFoundException, SQLException;
+    public Connection getConnection() throws ClassNotFoundException, SQLException{
+            Class.forName("com.mysql.jdbc.Driver");
+            return DriverManager.getConnection("jdbc:mysql://localhost/userinfo?characterEncoding=utf8","ncl","1234");
+    }
 }
