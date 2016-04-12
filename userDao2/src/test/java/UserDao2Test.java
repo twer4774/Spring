@@ -11,7 +11,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class UserDao2Test {
     @Test
     public void get() throws SQLException, ClassNotFoundException {
-        UserDao userDao = new UserDao();
+        UserDao userDao = new UserDao(new SimpleConnectionMaker());
 
         Long id = 1L;
         String name = "조원익";
@@ -35,7 +35,7 @@ public class UserDao2Test {
         user.setName(name);
         user.setPassword(password);
 
-        UserDao userDao = new UserDao();
+        UserDao userDao = new UserDao(new SimpleConnectionMaker());
         Long id = userDao.add(user);
 
        User resultUser = userDao.get(id);
