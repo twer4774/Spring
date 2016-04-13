@@ -25,12 +25,12 @@ public class UserDao {
             preparedStatement.setLong(1, id);
 
             resultSet = preparedStatement.executeQuery();
-            resultSet.next();
-
-            user = new User();
-            user.setId(resultSet.getLong("id"));
-            user.setName(resultSet.getString("name"));
-            user.setPassword(resultSet.getString("password"));
+           if (resultSet.next()) {
+               user = new User();
+               user.setId(resultSet.getLong("id"));
+               user.setName(resultSet.getString("name"));
+               user.setPassword(resultSet.getString("password"));
+           }
         }catch (ClassNotFoundException e){
             e.printStackTrace();
             throw e;
@@ -107,6 +107,45 @@ public class UserDao {
         return id;
     }
 
+    public void delete(Long id) throws SQLException, ClassNotFoundException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            connection=connectionMaker.getConnection();
+
+            String sql = "delete from userinfo where id = ?";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setLong(1, id);
+
+            preparedStatement.executeUpdate();
+
+        } catch (ClassNotFoundException e){
+            e.printStackTrace();
+            throw e;
+        } catch(SQLException e){
+            e.printStackTrace();
+            throw e;
+        } finally {
+            if(preparedStatement != null){
+                try{
+                    preparedStatement.close();
+                } catch(SQLException e){
+                    e.printStackTrace();
+                }
+            }
+
+            if(connection != null){
+                try{
+                    connection.close();
+                } catch(SQLException e){
+
+                }
+            }
+        }
+    }
+
+
     private Long getLastInsertId(Connection connection) throws SQLException {
         PreparedStatement preparedStatement2 = connection.prepareStatement("select last_insert_id()");
         ResultSet resultSet = preparedStatement2.executeQuery();
@@ -119,6 +158,4 @@ public class UserDao {
 
         return id;
     }
-
-
 }

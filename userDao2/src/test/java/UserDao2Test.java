@@ -7,6 +7,7 @@ import org.springframework.context.support.GenericXmlApplicationContext;
 import java.sql.SQLException;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
@@ -51,6 +52,24 @@ public class UserDao2Test {
         User resultUser = userDao.get(id);
 
       validate(id, name, password, resultUser);
+    }
+
+    @Test
+    public void delete() throws SQLException, ClassNotFoundException {
+        User user = new User();
+
+        String name = "원익";
+        String password = "2222";
+
+        user.setName(name);
+        user.setPassword(password);
+
+        Long id = userDao.add(user);
+
+        userDao.delete(id);
+
+        User resultUser = userDao.get(id);
+        assertThat(resultUser, nullValue());
     }
 
     private void validate(Long id, String name, String password, User user) {
