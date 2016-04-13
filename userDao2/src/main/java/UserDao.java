@@ -104,53 +104,23 @@ public class UserDao {
     }
 
     public void delete(Long id) throws SQLException, ClassNotFoundException {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
+        StatementStrategy statementStrategy = new DeleteUserStatementStrategy(id);
+        jdbcContextWithStatementStrategyForUpdate(statementStrategy);
+    }
 
-        try {
-            connection=connectionMaker.getConnection();
-
-            StatementStrategy statementStrategy = new DeleteUserStatementStrategy(id);
-            preparedStatement = statementStrategy.makeStatement(connection);
-
-            preparedStatement.executeUpdate();
-
-        } catch (ClassNotFoundException e){
-            e.printStackTrace();
-            throw e;
-        } catch(SQLException e){
-            e.printStackTrace();
-            throw e;
-        } finally {
-            if(preparedStatement != null){
-                try{
-                    preparedStatement.close();
-                } catch(SQLException e){
-                    e.printStackTrace();
-                }
-            }
-
-            if(connection != null){
-                try{
-                    connection.close();
-                } catch(SQLException e){
-
-                }
-            }
-        }
+    public void update(User user) throws ClassNotFoundException, SQLException {
+        StatementStrategy statementStrategy = new UpdateUserStatementStrategy(user);
+        jdbcContextWithStatementStrategyForUpdate(statementStrategy);
     }
 
 
-    public void update(User user) throws ClassNotFoundException, SQLException {
+    private void jdbcContextWithStatementStrategyForUpdate(StatementStrategy statementStrategy) throws ClassNotFoundException, SQLException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
         try {
             connection=connectionMaker.getConnection();
-
-            StatementStrategy statementStrategy = new UpdateUserStatementStrategy(user);
             preparedStatement = statementStrategy.makeStatement(connection);
-
             preparedStatement.executeUpdate();
 
         } catch (ClassNotFoundException e){
