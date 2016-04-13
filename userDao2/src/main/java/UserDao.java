@@ -19,10 +19,8 @@ public class UserDao {
         try{
             connection = connectionMaker.getConnection();
 
-            String sql = "select * from userinfo where id = ?";
-
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setLong(1, id);
+            StatementStrategy statementStrategy = new GetUserStatementStrategy(id);
+            preparedStatement = statementStrategy.makeStatement(connection);
 
             resultSet = preparedStatement.executeQuery();
            if (resultSet.next()) {
@@ -73,10 +71,8 @@ public class UserDao {
         try {
             connection=connectionMaker.getConnection();
 
-            String sql = "insert into userinfo (name, password) values (?, ?)";
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, user.getName());
-            preparedStatement.setString(2, user.getPassword());
+            StatementStrategy statementStrategy = new AddUserStatementStrategy(user);
+            preparedStatement = statementStrategy.makeStatement(connection);
 
             preparedStatement.executeUpdate();
 
@@ -114,9 +110,8 @@ public class UserDao {
         try {
             connection=connectionMaker.getConnection();
 
-            String sql = "delete from userinfo where id = ?";
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setLong(1, id);
+            StatementStrategy statementStrategy = new DeleteUserStatementStrategy(id);
+            preparedStatement = statementStrategy.makeStatement(connection);
 
             preparedStatement.executeUpdate();
 
@@ -153,11 +148,8 @@ public class UserDao {
         try {
             connection=connectionMaker.getConnection();
 
-            String sql = "update userinfo set name = ?, password = ? where id = ?";
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, user.getName());
-            preparedStatement.setString(2, user.getPassword());
-            preparedStatement.setLong(3, user.getId());
+            StatementStrategy statementStrategy = new UpdateUserStatementStrategy(user);
+            preparedStatement = statementStrategy.makeStatement(connection);
 
             preparedStatement.executeUpdate();
 

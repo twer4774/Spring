@@ -51,7 +51,7 @@ public class UserDao2Test {
         Long id = userDao.add(user);
         User resultUser = userDao.get(id);
 
-      validate(id, name, password, resultUser);
+        validate(id, name, password, resultUser);
     }
 
     @Test
