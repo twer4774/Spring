@@ -1,4 +1,8 @@
+import org.junit.Before;
 import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.GenericXmlApplicationContext;
 
 import java.sql.SQLException;
 
@@ -9,9 +13,18 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * Created by NCL on 2016-04-10.
  */
 public class UserDao2Test {
+    private UserDao userDao;
+
+    @Before
+    public void setUp(){
+        //ApplicationContext applicationContext = new AnnotationConfigApplicationContext(DaoFactory.class);
+        ApplicationContext applicationContext = new GenericXmlApplicationContext("daoFactory.xml");
+        //userDao = new DaoFactory().userDao();
+        userDao = (UserDao) applicationContext.getBean("userDao");
+    }
+
     @Test
     public void get() throws SQLException, ClassNotFoundException {
-        UserDao userDao = new DaoFactory().getUserDao();
 
         Long id = 1L;
         String name = "조원익";
@@ -19,9 +32,8 @@ public class UserDao2Test {
 
         User user = userDao.get(id);
 
-        assertThat(user.getId(), is(id));
-        assertThat(user.getName(), is(name));
-        assertThat(user.getPassword(), is(password));
+        validate(id, name, password, user);
+
 
     }
 
@@ -35,13 +47,15 @@ public class UserDao2Test {
         user.setName(name);
         user.setPassword(password);
 
-        UserDao userDao = new DaoFactory().getUserDao();
         Long id = userDao.add(user);
+        User resultUser = userDao.get(id);
 
-       User resultUser = userDao.get(id);
+      validate(id, name, password, resultUser);
+    }
 
-        assertThat(resultUser.getId(), is(id));
-        assertThat(resultUser.getName(), is(name));
-        assertThat(resultUser.getPassword(), is(password));
+    private void validate(Long id, String name, String password, User user) {
+        assertThat(user.getId(), is(id));
+        assertThat(user.getName(), is(name));
+        assertThat(user.getPassword(), is(password));
     }
 }
