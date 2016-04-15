@@ -11,6 +11,26 @@ public class UserDao {
     }
 
     public User get(Long id) throws SQLException, ClassNotFoundException {
+        StatementStrategy statementStrategy = new GetUserStatementStrategy(id);
+        return jdbcContextWithStatementStrategyForQuery(statementStrategy);
+    }
+
+    public Long add(User user) throws ClassNotFoundException, SQLException {
+        StatementStrategy statementStrategy = new AddUserStatementStrategy(user);
+        return jdbcContextWithStatementStrategyForInsert(statementStrategy);
+    }
+
+    public void delete(Long id) throws SQLException, ClassNotFoundException {
+        StatementStrategy statementStrategy = new DeleteUserStatementStrategy(id);
+        jdbcContextWithStatementStrategyForUpdate(statementStrategy);
+    }
+
+    public void update(User user) throws ClassNotFoundException, SQLException {
+        StatementStrategy statementStrategy = new UpdateUserStatementStrategy(user);
+        jdbcContextWithStatementStrategyForUpdate(statementStrategy);
+    }
+
+    private User jdbcContextWithStatementStrategyForQuery(StatementStrategy statementStrategy) throws ClassNotFoundException, SQLException {
         Connection connection = null;
         ResultSet resultSet = null;
         PreparedStatement preparedStatement = null;
@@ -19,16 +39,15 @@ public class UserDao {
         try{
             connection = connectionMaker.getConnection();
 
-            StatementStrategy statementStrategy = new GetUserStatementStrategy(id);
             preparedStatement = statementStrategy.makeStatement(connection);
 
             resultSet = preparedStatement.executeQuery();
-           if (resultSet.next()) {
-               user = new User();
-               user.setId(resultSet.getLong("id"));
-               user.setName(resultSet.getString("name"));
-               user.setPassword(resultSet.getString("password"));
-           }
+            if (resultSet.next()) {
+                user = new User();
+                user.setId(resultSet.getLong("id"));
+                user.setName(resultSet.getString("name"));
+                user.setPassword(resultSet.getString("password"));
+            }
         }catch (ClassNotFoundException e){
             e.printStackTrace();
             throw e;
@@ -44,7 +63,6 @@ public class UserDao {
                 }
             }
         }
-
         if(preparedStatement != null){
             try{
                 preparedStatement.close();
@@ -59,11 +77,10 @@ public class UserDao {
 
             }
         }
-
         return user;
     }
 
-    public Long add(User user) throws ClassNotFoundException, SQLException {
+    private Long jdbcContextWithStatementStrategyForInsert(StatementStrategy statementStrategy) throws ClassNotFoundException, SQLException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         Long id = null;
@@ -71,7 +88,6 @@ public class UserDao {
         try {
             connection=connectionMaker.getConnection();
 
-            StatementStrategy statementStrategy = new AddUserStatementStrategy(user);
             preparedStatement = statementStrategy.makeStatement(connection);
 
             preparedStatement.executeUpdate();
@@ -101,16 +117,6 @@ public class UserDao {
             }
         }
         return id;
-    }
-
-    public void delete(Long id) throws SQLException, ClassNotFoundException {
-        StatementStrategy statementStrategy = new DeleteUserStatementStrategy(id);
-        jdbcContextWithStatementStrategyForUpdate(statementStrategy);
-    }
-
-    public void update(User user) throws ClassNotFoundException, SQLException {
-        StatementStrategy statementStrategy = new UpdateUserStatementStrategy(user);
-        jdbcContextWithStatementStrategyForUpdate(statementStrategy);
     }
 
 
