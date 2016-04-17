@@ -5,9 +5,13 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd" >
 
     <bean id="userDao" class="UserDao" >
-        <constructor-arg ref="connectionMaker"/>
+        <property name="jdbcContext" ref="jdbcContext" />
     </bean>
 
     <bean id="connectionMaker" class="SimpleConnectionMaker"/>
+
+    <bean id="jdbcContext" class="JdbcContext">
+        <property name="connectionMaker" ref="connectionMaker" />
+    </bean>
 
 </beans>
