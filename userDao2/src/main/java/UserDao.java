@@ -31,27 +31,15 @@ public class UserDao {
     }
 
     public void delete(Long id) throws SQLException, ClassNotFoundException {
-        StatementStrategy statementStrategy = (Connection connection) ->{
-            String sql = "delete from userinfo where id = ?";
-
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setLong(1, id);
-            return preparedStatement;
-        };
-        jdbcContext.jdbcContextWithStatementStrategyForUpdate(statementStrategy);
+        String sql = "delete from userinfo where id = ?";
+        Object[] objs = new Object[] {id};
+        jdbcContext.update(sql, objs);
     }
 
     public void update(User user) throws ClassNotFoundException, SQLException {
-        StatementStrategy statementStrategy = (Connection connection) ->{
-            String sql = "update userinfo set name = ?, password = ? where id = ?";
-
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, user.getName());
-            preparedStatement.setString(2, user.getPassword());
-            preparedStatement.setLong(3, user.getId());
-            return preparedStatement;
-        };
-        jdbcContext.jdbcContextWithStatementStrategyForUpdate(statementStrategy);
+        String sql = "update userinfo set name = ?, password = ? where id = ?";
+        Object[] objs = new Object[] {user.getName(), user.getPassword(), user.getId()};
+        jdbcContext.update(sql, objs);
     }
 
     public void setJdbcContext(JdbcContext jdbcContext){
