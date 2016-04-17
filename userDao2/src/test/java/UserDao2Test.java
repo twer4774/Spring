@@ -25,7 +25,7 @@ public class UserDao2Test {
     }
 
     @Test
-    public void get() throws SQLException, ClassNotFoundException {
+    public void get()  {
 
         Long id = 1L;
         String name = "조원익";
@@ -39,7 +39,7 @@ public class UserDao2Test {
     }
 
     @Test
-    public void add() throws SQLException, ClassNotFoundException {
+    public void add()  {
         User user = new User();
 
         String name = "원익";
@@ -55,7 +55,7 @@ public class UserDao2Test {
     }
 
     @Test
-    public void delete() throws SQLException, ClassNotFoundException {
+    public void delete()  {
         User user = new User();
 
         String name = "원익";
@@ -73,7 +73,7 @@ public class UserDao2Test {
     }
 
     @Test
-    public void update() throws SQLException, ClassNotFoundException {
+    public void update()  {
         User user = new User();
 
         String name = "원익";

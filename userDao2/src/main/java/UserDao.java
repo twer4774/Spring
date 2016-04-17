@@ -14,7 +14,7 @@ public class UserDao {
     private JdbcTemplate jdbcTemplate;
 
 
-    public User get(Long id) throws SQLException, ClassNotFoundException {
+    public User get(Long id)  {
         String sql = "select * from userinfo where id = ?";
         User user = null;
         try{
@@ -34,7 +34,7 @@ public class UserDao {
         return user;
     }
 
-    public Long add(User user) throws ClassNotFoundException, SQLException {
+    public Long add(User user)  {
         String sql = "insert into userinfo (name, password) values (?,?)";
         GeneratedKeyHolder generatedKeyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(new PreparedStatementCreator() {
@@ -49,13 +49,13 @@ public class UserDao {
         return (Long) generatedKeyHolder.getKey();
     }
 
-    public void delete(Long id) throws SQLException, ClassNotFoundException {
+    public void delete(Long id)  {
         String sql = "delete from userinfo where id = ?";
         Object[] objs = new Object[] {id};
         jdbcTemplate.update(sql, objs);
     }
 
-    public void update(User user) throws ClassNotFoundException, SQLException {
+    public void update(User user)  {
         String sql = "update userinfo set name = ?, password = ? where id = ?";
         Object[] objs = new Object[] {user.getName(), user.getPassword(), user.getId()};
         jdbcTemplate.update(sql, objs);
