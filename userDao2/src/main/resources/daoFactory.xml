@@ -8,7 +8,13 @@
         <property name="jdbcContext" ref="jdbcContext" />
     </bean>
 
-    <bean id="connectionMaker" class="SimpleConnectionMaker"/>
+    <bean id="connectionMaker" class="SimpleConnectionMaker">
+            <property name="driverClass" value="com.mysql.jdbc.Driver"/>
+            <property name="url" value="jdbc:mysql://localhost/userinfo?characterEncoding=utf8"/>
+            <property name="username" value="ncl"/>
+            <property name="password" value="1234"/>
+
+    </bean>
 
     <bean id="jdbcContext" class="JdbcContext">
         <property name="connectionMaker" ref="connectionMaker" />
